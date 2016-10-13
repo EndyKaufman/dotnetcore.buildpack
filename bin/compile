@@ -114,7 +114,7 @@ print "dotnet restore all dependencies completed"
 
 if [ -d "${SRC_DIR}/Migrations" ]; then
 	print "dotnet ef database update"
-	dotnet ef database update
+	dotnet ef database update ${PROJECT_JSON_FILE}
 fi
 
 #dotnet pulish using project.json
