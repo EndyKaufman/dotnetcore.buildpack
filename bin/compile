@@ -65,73 +65,6 @@ print "Build Dir Path: ${SRC_DIR}"
 PROJECT_JSON_FILES=$(find ${SRC_DIR}/. -maxdepth 3 -iname "project.json")
 printf 'Found %s project.json files\n' $(echo "$PROJECT_JSON_FILES" | wc -l | tr -d ' ')
 PROJECT_JSON_FILE=$(echo "$PROJECT_JSON_FILES" | head -1)
-#!/usr/bin/env bash
-# bin/compile <build-dir> <cache-dir>
-
-# fail fast
-set -e
-
-if [ $STACK != "cedar-14" ]; then
-	echo "Stack ${STACK} not supported" && exit 1
-fi
-
-BUILD_DIR=$1
-CACHE_DIR=$2
-ENV_DIR=$3
-#: ${LIBUV_VERSION:="1.8.0"}
-: ${CORE_BRANCH:="Sdk"}
-: ${CORE_REL_VERSION:="rel-1.0.0"}
-: ${CORE_VERSION:="latest"}
-: ${CORE_RUNTIME:="Active"}
-: ${NODE_VERSION:="6.3.1"}
-
-function print() {
-  echo "-----> $*"
-}
-
-function indent() {
-  c='s/^/       /'
-  case $(uname) in
-    Darwin) sed -l "$c";;
-    *)      sed -u "$c";;
-  esac
-}
-
-function export_env_dir() {
-  local env_dir=$1
-  #local whitelist_regex=${2:-'(CORE_VERSION|LIBUV_VERSION|PROJECT|BUILD_DEBUG|CORE_BRANCH|CORE_REL_VERSION)$'}
-  local whitelist_regex=${2:-'(CORE_VERSION|PROJECT|BUILD_DEBUG|CORE_BRANCH|CORE_REL_VERSION)$'}
-  local blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
-  if [ -d "$env_dir" ]; then
-    for e in $(ls $env_dir); do
-      echo "$e" | grep -E "$whitelist_regex" | grep -qvE "$blacklist_regex" &&
-      export "$e=$(cat $env_dir/$e)"
-      :
-    done
-  fi
-}
-
-LD_DIR=`cd $(dirname $0); cd ..; pwd`
-export_env_dir ${ENV_DIR}
-
-# Create Cache Directory
-mkdir -p ${CACHE_DIR}
-
-# Create Source Directory
-# If you compiled from build dirctory directly then dnu publish throws error due to directory name
-# contains underscore '_'. dnu will not support
-SRC_DIR=`mktemp -d`
-# Move source code into temporary src dir
-(
-    shopt -s dotglob
-    mv ${BUILD_DIR}/* ${SRC_DIR}
-)
-print "Build Dir Path: ${SRC_DIR}"
-
-# Find project.json
-PROJECT_JSON_FILES=$(find ${SRC_DIR}/. -maxdepth 3 -iname "project.json")
-printf 'Found %s project.json files\n' $(echo "$PROJECT_JSON_FILES" | wc -l | tr -d ' ')
-PROJECT_JSON_FILE=$(echo "$PROJECT_JSON_FILES" | head -1)
 
 if [ -n "$BUILD_DEBUG" ]; then
 	CORE_CONFIG="Debug"
@@ -175,10 +108,6 @@ ln -s ${BUILD_DIR}/dotnet ${HOME}
 export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 
-print "dotnet ef database update"
-dotnet ef database update
-print "dotnet ef database update completed"
-
 print "dotnet restore all dependencies"
 dotnet restore ${PROJECT_JSON_FILE} --no-cache
 print "dotnet restore all dependencies completed"
@@ -204,10 +133,6 @@ export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.a
 EOF
 
 print "Procfile setting"
-cat <<EOF >${BUILD_DIR}/Procfile
-web: dotnet ${HOME}/${PROJECT_NAME}.dll http://0.0.0.0:\$PORT ${CORE_ENV}
-EOF
-
 cat <<EOF >${BUILD_DIR}/Procfile
 web: dotnet ${HOME}/${PROJECT_NAME}.dll http://0.0.0.0:\$PORT ${CORE_ENV}
 EOF
