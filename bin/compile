@@ -113,8 +113,8 @@ dotnet restore ${PROJECT_JSON_FILE} --no-cache
 print "dotnet restore all dependencies completed"
 
 if [ -d "${SRC_DIR}/Migrations" ]; then
-	print "dotnet ef database update"
-	dotnet ef database update --data-dir ${SRC_DIR} --project-dir ${BUILD_DIR}
+	print "dotnet ef --data-dir ${SRC_DIR} --project-dir ${BUILD_DIR} database update"
+	dotnet ef --data-dir ${SRC_DIR} --project-dir ${BUILD_DIR} database update
 fi
 
 #dotnet pulish using project.json
