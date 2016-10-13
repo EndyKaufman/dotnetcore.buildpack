@@ -108,6 +108,11 @@ ln -s ${BUILD_DIR}/dotnet ${HOME}
 export PATH="${HOME}/dotnet:${PATH}"
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
 
+if [ -d "${SRC_DIR}/Migrations" ]; then
+	print "dotnet ef database update"
+	dotnet ef database update
+fi
+
 print "dotnet restore all dependencies"
 dotnet restore ${PROJECT_JSON_FILE} --no-cache
 print "dotnet restore all dependencies completed"
