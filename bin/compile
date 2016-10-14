@@ -117,7 +117,6 @@ print "dotnet restore all dependencies completed"
 if [ -d "${SRC_DIR}/Migrations" ]; then
 	print "dotnet ef database update"
 	cd ${SRC_DIR} && dotnet ef database update
-	cp -f ${SRC_DIR}/bin/Debug/*.db ${BUILD_DIR}
 	count_sqlite3=0
 	count_db=0
 
