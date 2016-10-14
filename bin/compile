@@ -144,18 +144,9 @@ if [ -d "${SRC_DIR}/Migrations" ]; then
 	cd ${SRC_DIR} && dotnet ef database update
 	count_sqlite3=0
 	count_db=0
-	ls ${SRC_DIR}/bin/Debug/netcoreapp1.0;
-	while IFS= read -r -d '${SRC_DIR}/bin/Debug/netcoreapp1.0' file; do
-		case $file in:
-		   *.sqlite3)
-			   ((count_sqlite3++))
-			   ;;
-		   *.db)
-			   ((count_db++))
-			   ;;
-		esac
-	done < <(find "$1" -type f -print0)
-	
+	count_sqlite3=$(find ${SRC_DIR}/bin/Debug/netcoreapp1.0 -maxdepth 1 -type f -name '*.sqlite3' | wc -l)
+	count_db=$(find ${SRC_DIR}/bin/Debug/netcoreapp1.0 -maxdepth 1 -type f -name '*.db' | wc -l)
+	print "sqlite3:${count_sqlite3}, db:${count_db}"
 	print "sqlite3:${count_sqlite3}, db:${count_db}"
 	if ((count_sqlite3>0)); then
 		print "cp -f ${SRC_DIR}/bin/Debug/netcoreapp1.0/*.sqlite3 ${BUILD_DIR}"
