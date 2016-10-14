@@ -146,11 +146,14 @@ if [ -d "${SRC_DIR}/Migrations" ]; then
 	count_db=0
 	ls ${SRC_DIR}/bin/Debug/netcoreapp1.0;
 	while IFS= read -r -d '${SRC_DIR}/bin/Debug/netcoreapp1.0' file; do
-	   if [[ $file == *.sqlite3 ]]; then 
-		   (( count_sqlite3++ ))
-	   elif [[ $file == *.db ]]; then
-		   (( count_db++ ))
-	   fi  
+		case $file in:
+		   *.sqlite3)
+			   ((count_sqlite3++))
+			   ;;
+		   *.db)
+			   ((count_db++))
+			   ;;
+		esac
 	done < <(find "$1" -type f -print0)
 	
 	print "sqlite3:${count_sqlite3}, db:${count_db}"
