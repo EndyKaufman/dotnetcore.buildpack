@@ -147,14 +147,13 @@ if [ -d "${SRC_DIR}/Migrations" ]; then
 	count_sqlite3=$(find ${SRC_DIR}/bin/Debug/netcoreapp1.0 -maxdepth 1 -type f -name '*.sqlite3' | wc -l)
 	count_db=$(find ${SRC_DIR}/bin/Debug/netcoreapp1.0 -maxdepth 1 -type f -name '*.db' | wc -l)
 	print "sqlite3:${count_sqlite3}, db:${count_db}"
-	print "sqlite3:${count_sqlite3}, db:${count_db}"
 	if ((count_sqlite3>0)); then
 		print "cp -f ${SRC_DIR}/bin/Debug/netcoreapp1.0/*.sqlite3 ${BUILD_DIR}"
-		cp -f "${SRC_DIR}/bin/Debug/netcoreapp1.0/*.sqlite3" ${BUILD_DIR}
+		cp -f ${SRC_DIR}/bin/Debug/netcoreapp1.0/*.sqlite3 ${BUILD_DIR}
 	fi
 	if ((count_db>0)); then
-		print "cp -f ${SRC_DIR}/bin/netcoreapp1.0/Debug/*.db ${BUILD_DIR}"
-		cp -f "${SRC_DIR}/bin/Debug/netcoreapp1.0/*.db" ${BUILD_DIR}
+		print "cp -f ${SRC_DIR}/bin/Debug/netcoreapp1.0/*.db ${BUILD_DIR}"
+		cp -f ${SRC_DIR}/bin/Debug/netcoreapp1.0/*.db ${BUILD_DIR}
 	fi
 	
 	print "dotnet ef database update completed"
