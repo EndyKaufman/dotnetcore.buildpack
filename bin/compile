@@ -115,11 +115,28 @@ dotnet restore ${PROJECT_JSON_FILE} --no-cache
 print "dotnet restore all dependencies completed"
 
 if [ -d "${SRC_DIR}/Migrations" ]; then
-	print "cd ${SRC_DIR} && dotnet ef database update"
+	print "dotnet ef database update"
 	cd ${SRC_DIR} && dotnet ef database update
-	ls bin
-	cp -f ${SRC_DIR}/*.sqlite3 ${BUILD_DIR}
-	cp -f ${SRC_DIR}/*.db ${BUILD_DIR}
+	cp -f ${SRC_DIR}/bin/Debug/*.db ${BUILD_DIR}
+	count_sqlite3=0
+	count_db=0
+
+	while IFS= read -r -d '${SRC_DIR}/bin/Debug' file; do
+	   if [[ $file == *.sqlite3 ]]; then 
+		   (( count_sqlite3++ ))
+	   elif [[ $file == *.db ]]; then
+		   (( count_db++ ))
+	   fi  
+	done < <(find "$1" -type f -print0)
+	
+	if [count_sqlite3>0]; then
+		cp -f ${SRC_DIR}/bin/Debug/*.sqlite3 ${BUILD_DIR}
+	fi
+	if [count_db>0]; then
+		cp -f ${SRC_DIR}/bin/Debug/*.db ${BUILD_DIR}
+	fi
+	
+	print "dotnet ef database update"
 fi
 
 #dotnet pulish using project.json
