@@ -144,10 +144,8 @@ if [ -d "${SRC_DIR}/Migrations" ]; then
 	cd ${SRC_DIR} && dotnet ef database update
 	count_sqlite3=0
 	count_db=0
-	
-	ls ${SRC_DIR}/bin/Debug
-	
-	while IFS= read -r -d '${SRC_DIR}/bin/Debug' file; do
+		
+	while IFS= read -r -d '${SRC_DIR}/bin/Debug/netcoreapp1.0' file; do
 	   if [[ $file == *.sqlite3 ]]; then 
 		   (( count_sqlite3++ ))
 	   elif [[ $file == *.db ]]; then
@@ -155,14 +153,13 @@ if [ -d "${SRC_DIR}/Migrations" ]; then
 	   fi  
 	done < <(find "$1" -type f -print0)
 	
-	print "${count_sqlite3}, ${count_db}"
 	if ((count_sqlite3>0)); then
-		print "cp -f ${SRC_DIR}/bin/Debug/*.sqlite3 ${BUILD_DIR}"
-		cp -f "${SRC_DIR}/bin/Debug/*.sqlite3" ${BUILD_DIR}
+		print "cp -f ${SRC_DIR}/bin/Debug/netcoreapp1.0/*.sqlite3 ${BUILD_DIR}"
+		cp -f "${SRC_DIR}/bin/Debug/netcoreapp1.0/*.sqlite3" ${BUILD_DIR}
 	fi
 	if ((count_db>0)); then
-		print "cp -f ${SRC_DIR}/bin/Debug/*.db ${BUILD_DIR}"
-		cp -f "${SRC_DIR}/bin/Debug/*.db" ${BUILD_DIR}
+		print "cp -f ${SRC_DIR}/bin/netcoreapp1.0/Debug/*.db ${BUILD_DIR}"
+		cp -f "${SRC_DIR}/bin/Debug/netcoreapp1.0/*.db" ${BUILD_DIR}
 	fi
 	
 	print "dotnet ef database update"
