@@ -102,7 +102,7 @@ echo "CORE_REL_VERSION: ${CORE_REL_VERSION}"
 echo "CORE_VERSION: ${CORE_VERSION}"
 
 print "install mono"
-apt-get install mono-complete -y
+print "run on host: apt-get install mono-complete -y"
 export DOTNET_REFENCE_ASSEMBLIES_PATH=/usr/lib/mono/xbuild-framewor‌​ks
 print "install mono completed"
 
