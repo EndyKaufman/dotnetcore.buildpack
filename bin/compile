@@ -103,7 +103,7 @@ echo "CORE_VERSION: ${CORE_VERSION}"
 
 print "install mono"
 print "run on host: apt-get install mono-complete -y"
-export DOTNET_REFENCE_ASSEMBLIES_PATH=/usr/lib/mono/xbuild-frameworks
+export DOTNET_REFERENCE_ASSEMBLIES_PATH=/usr/lib/mono/xbuild-frameworks
 print "install mono completed"
 
 CORE_DWLD_URL="https://dotnetcli.blob.core.windows.net/dotnet/${CORE_BRANCH}/${CORE_REL_VERSION}/dotnet-dev-ubuntu-x64.${CORE_VERSION}.tar.gz"
